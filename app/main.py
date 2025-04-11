@@ -5,7 +5,7 @@ import plotly.express as px
 import os
 import sys
 
-# 🛠️ Автоинициализация базы, если она не существует
+# Автоинициализация базы, если она не существует
 if not os.path.exists("db/my.db"):
     import sys
     import os
@@ -33,27 +33,27 @@ def load_data():
 
 df = load_data()
 
-# 📍 Боковая панель фильтров
+# Боковая панель фильтров
 with st.sidebar:
     st.header("Фильтры")
     cities = st.multiselect("Города", df["city"].dropna().unique())
     categories = st.multiselect("Категории", df["categoryname"].dropna().unique())
 
-# 🔍 Фильтрация
+#  Фильтрация
 df_filtered = df.copy()
 if cities:
     df_filtered = df_filtered[df_filtered["city"].isin(cities)]
 if categories:
     df_filtered = df_filtered[df_filtered["categoryname"].isin(categories)]
 
-# 📈 KPI
+# KPI
 col1, col2, col3, col4 = st.columns(4)
 col1.metric("🔁 Продаж", f"{df_filtered['amount'].sum():,.0f}")
 col2.metric("👥 Клиентов", df_filtered['clientid'].nunique())
 col3.metric("💰 Средняя цена", f"{df_filtered['price'].mean():.2f} $")
 col4.metric("📦 Выручка", f"{df_filtered['revenue'].sum():,.0f} $")
 
-# 📊 Графики
+# Графики
 st.subheader("📦 Продажи по категориям")
 fig1 = px.bar(
     df_filtered.groupby("categoryname")["amount"].sum().sort_values().reset_index(),

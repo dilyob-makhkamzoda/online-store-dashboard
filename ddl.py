@@ -12,14 +12,14 @@ EXCEL_PATH = "data/online_store_sales.xlsx"
 
 
 def run_ddl():
-    print("🔌 Подключение к DuckDB...")
+    print(" Подключение к DuckDB...")
     con = duckdb.connect(DB_PATH)
 
-    print("📄 Выполнение create_tables.sql...")
+    print(" Выполнение create_tables.sql...")
     with open("queries/create_tables.sql", "r", encoding="utf-8") as f:
         con.execute(f.read())
 
-    print("📥 Загрузка Excel...")
+    print(" Загрузка Excel...")
     xls = pd.ExcelFile(EXCEL_PATH)
 
     df_clients = xls.parse("Clients").dropna(subset=["Clientid"]).copy()
@@ -32,10 +32,10 @@ def run_ddl():
     if "Sales" in xls.sheet_names:
         df_sales = xls.parse("Sales").dropna(subset=["clientid", "productid"]).copy()
     else:
-        print("❌ Лист Sales не найден в Excel. Проверь название листа.")
+        print(" Лист Sales не найден в Excel. Проверь название листа.")
         return
 
-    print("🧹 Чистка данных...")
+    print("Чистка данных...")
     df_clients["BirthDate"] = pd.to_datetime(df_clients["BirthDate"], errors="coerce")
     df_clients["DateFirstPurchase"] = pd.to_datetime(df_clients["DateFirstPurchase"], errors="coerce")
 
@@ -47,7 +47,7 @@ def run_ddl():
     df_sales = df_sales[df_sales["clientid"].isin(df_clients["Clientid"])]
     df_sales = df_sales[df_sales["productid"].isin(df_products["productid"])]
 
-    print("🧱 Загрузка данных в БД...")
+    print("Загрузка данных в БД...")
     con.execute("DELETE FROM course_project.sales;")
     con.execute("DELETE FROM course_project.products;")
     con.execute("DELETE FROM course_project.product_category;")
@@ -63,11 +63,11 @@ def run_ddl():
     con.execute("INSERT INTO course_project.products SELECT * FROM products_temp")
     con.execute("INSERT INTO course_project.sales SELECT * FROM sales_temp")
 
-    print("🧩 Создание представлений...")
+    print("Создание представлений...")
     with open("queries/view.sql", "r", encoding="utf-8") as f:
         con.execute(f.read())
 
-    print("✅ DDL завершён. База и данные готовы.")
+    print("DDL завершён. База и данные готовы.")
 
 
 if __name__ == "__main__":
