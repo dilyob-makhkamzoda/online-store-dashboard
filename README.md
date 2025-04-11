@@ -49,7 +49,7 @@ online_store_dashboard/
 - Дашборд с KPI, фильтрами и графиками
 
 ## 🚀 Деплой дашборда
-**Streamlit Cloud:** [ссылка появится после загрузки](https://streamlit.io/cloud)
+**Streamlit Cloud:** [ссылка:](https://online-store-dashboard-nv2ybkgyy84fjqitmt8b6x.streamlit.app/)
 
 ## 📝 Как запустить локально
 ```bash
